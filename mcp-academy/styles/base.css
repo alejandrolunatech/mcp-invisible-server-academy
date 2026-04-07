@@ -1,0 +1,226 @@
+/* ─────────────────────────────────────────────────────────
+   base.css — CSS reset, custom properties, typography
+   ───────────────────────────────────────────────────────── */
+
+/* ---------- Custom Properties (Design Tokens) ---------- */
+:root {
+  /* Colors */
+  --bg-deep:        #07090f;
+  --bg-surface:     #0f1322;
+  --bg-card:        #161c2e;
+  --bg-card-hover:  #1e2640;
+  --bg-terminal:    #0a0f1a;
+
+  --clr-primary:    #00d4ff;
+  --clr-secondary:  #a855f7;
+  --clr-accent:     #f59e0b;
+  --clr-success:    #10b981;
+  --clr-warning:    #f59e0b;
+  --clr-error:      #ef4444;
+
+  --clr-text:       #e2e8f0;
+  --clr-text-muted: #94a3b8;
+  --clr-text-dim:   #64748b;
+
+  --clr-border:     rgba(0, 212, 255, 0.15);
+  --clr-border-mid: rgba(0, 212, 255, 0.3);
+
+  /* Terminal colors */
+  --term-bg:        #060a12;
+  --term-text:      #a8ff78;
+  --term-prompt:    #00d4ff;
+  --term-error:     #ff6b6b;
+  --term-warn:      #ffd93d;
+  --term-info:      #74b9ff;
+  --term-muted:     #636e72;
+
+  /* Fonts */
+  --font-base:  'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono:  'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-title: 'Georgia', 'Times New Roman', serif;
+
+  /* Spacing scale */
+  --sp-1:  0.25rem;
+  --sp-2:  0.5rem;
+  --sp-3:  0.75rem;
+  --sp-4:  1rem;
+  --sp-5:  1.25rem;
+  --sp-6:  1.5rem;
+  --sp-8:  2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 18px;
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* Glows */
+  --glow-primary:   0 0 16px rgba(0, 212, 255, 0.35), 0 0 32px rgba(0, 212, 255, 0.15);
+  --glow-secondary: 0 0 16px rgba(168, 85, 247, 0.35), 0 0 32px rgba(168, 85, 247, 0.15);
+  --glow-accent:    0 0 16px rgba(245, 158, 11, 0.35);
+  --glow-success:   0 0 16px rgba(16, 185, 129, 0.35);
+  --glow-error:     0 0 16px rgba(239, 68, 68, 0.35);
+
+  /* Z-index scale */
+  --z-base:    1;
+  --z-overlay: 100;
+  --z-modal:   200;
+  --z-toast:   300;
+  --z-top:     400;
+}
+
+/* ---------- CSS Reset ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-base);
+  background-color: var(--bg-deep);
+  color: var(--clr-text);
+  line-height: 1.6;
+  min-height: 100%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: var(--clr-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+/* ---------- Typography ---------- */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-family: var(--font-title); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.2rem, 3vw, 1.75rem); }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p { margin-bottom: var(--sp-4); }
+p:last-child { margin-bottom: 0; }
+
+strong { font-weight: 700; color: var(--clr-primary); }
+em { font-style: italic; color: var(--clr-accent); }
+
+code {
+  font-family: var(--font-mono);
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--clr-primary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875em;
+}
+
+pre {
+  font-family: var(--font-mono);
+  background: var(--term-bg);
+  color: var(--term-text);
+  padding: var(--sp-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  line-height: 1.5;
+  font-size: 0.875rem;
+  border: 1px solid var(--clr-border);
+}
+
+/* ---------- Utility Classes ---------- */
+.text-primary   { color: var(--clr-primary) !important; }
+.text-secondary { color: var(--clr-secondary) !important; }
+.text-accent    { color: var(--clr-accent) !important; }
+.text-success   { color: var(--clr-success) !important; }
+.text-error     { color: var(--clr-error) !important; }
+.text-muted     { color: var(--clr-text-muted) !important; }
+.text-center    { text-align: center !important; }
+.text-mono      { font-family: var(--font-mono) !important; }
+
+.hidden  { display: none !important; }
+.visible { visibility: visible !important; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mt-auto { margin-top: auto !important; }
+.mb-4    { margin-bottom: var(--sp-4) !important; }
+.mb-8    { margin-bottom: var(--sp-8) !important; }
+.gap-4   { gap: var(--sp-4) !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-surface); }
+::-webkit-scrollbar-thumb {
+  background: var(--clr-border-mid);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--clr-primary); }
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MCP Academy: The Invisible Server — an educational browser game teaching Python MCP server concepts, STDIO, tools, and UV." />
+  <title>MCP Academy: The Invisible Server</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/layout.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+  <link rel="stylesheet" href="styles/scenes.css" />
+  <link rel="stylesheet" href="styles/effects.css" />
+
+  <!-- Favicon (emoji) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧙</text></svg>" />
+</head>
+<body>
+
+  <!-- Ambient particle canvas -->
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- App root -->
+  <div id="app">
+
+    <!-- Top navigation bar (populated by main.js) -->
+    <div id="top-bar" class="top-bar" role="navigation" aria-label="Academy navigation"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCENE: HOME
+         ═══════════════════════════════════════════════════════ -->
+    <section id="scene-home" class="scene" role="main" aria-label="Home"></section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCENE: MAP
+         ═══════════════════════════════════════════════════════ -->
+    <section id="scene-map" class="scene" role="main" aria-label="World Map"></section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCENE: CHAPTER
+         ═══════════════════════════════════════════════════════ -->
+    <section id="scene-chapter" class="scene" role="main" aria-label="Chapter"></section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCENE: GLOSSARY
+         ═══════════════════════════════════════════════════════ -->
+    <section id="scene-glossary" class="scene" role="main" aria-label="Glossary"></section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCENE: SETTINGS
+         ═══════════════════════════════════════════════════════ -->
+    <section id="scene-settings" class="scene" role="main" aria-label="Settings"></section>
+
+  </div><!-- /#app -->
+
+  <!-- Toast container (injected by ToastComponent) -->
+
+  <!-- Main JS (ES module entry point) -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
