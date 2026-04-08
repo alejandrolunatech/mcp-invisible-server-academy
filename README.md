@@ -22,7 +22,6 @@ An interactive browser-based educational game that teaches Python MCP (Model Con
 ### Option A — Python (no install needed)
 
 ```bash
-cd mcp-academy
 python3 -m http.server 8080
 ```
 
@@ -31,7 +30,7 @@ Open → **http://localhost:8080**
 ### Option B — Node (http-server)
 
 ```bash
-npx http-server mcp-academy -p 8080 -c-1
+npx http-server . -p 8080 -c-1
 ```
 
 Open → **http://localhost:8080**
@@ -48,7 +47,7 @@ Open → **http://localhost:8080**
 ## 📁 Project Structure
 
 ```
-mcp-academy/
+mcp-invisible-server-academy/
 ├── index.html               # Main HTML shell
 ├── README.md
 │
@@ -63,14 +62,22 @@ mcp-academy/
 │   ├── main.js              # Entry point — boots the game
 │   ├── state.js             # Global game state (getState/setState/subscribe)
 │   ├── router.js            # Hash-based scene router
+│   ├── i18n.js              # Internationalisation (EN / ES / NL)
 │   │
 │   ├── data/
-│   │   ├── chapters.js      # All chapter content (dialogue, puzzles, quizzes)
-│   │   ├── glossary.js      # 14 MCP glossary terms
-│   │   └── achievements.js  # 8 achievement definitions
+│   │   ├── chapters.js           # English chapter content (dialogue, puzzles, quizzes)
+│   │   ├── chapters.es.js        # Spanish chapter translations
+│   │   ├── chapters.nl.js        # Dutch chapter translations
+│   │   ├── localizedChapters.js  # Helper — merges translated text onto EN metadata
+│   │   ├── glossary.js           # English glossary terms
+│   │   ├── glossary.es.js        # Spanish glossary
+│   │   ├── glossary.nl.js        # Dutch glossary
+│   │   ├── achievements.js       # English achievement definitions
+│   │   ├── achievements.es.js    # Spanish achievements
+│   │   └── achievements.nl.js    # Dutch achievements
 │   │
 │   ├── systems/
-│   │   ├── saveSystem.js    # localStorage save/load/reset
+│   │   ├── saveSystem.js         # localStorage save/load/reset
 │   │   ├── dialogueSystem.js
 │   │   ├── quizSystem.js
 │   │   ├── achievementSystem.js
@@ -99,17 +106,19 @@ mcp-academy/
 │   ├── audio/
 │   └── icons/
 │
-└── docs/
-    ├── real-python-mcp-example.md
-    ├── uv-commands.md
-    └── teacher-guide.md
+├── docs/
+│   ├── real-python-mcp-example.md
+│   ├── uv-commands.md
+│   └── teacher-guide.md
+│
+└── 0x_*.md                  # Game design & spec documents
 ```
 
 ---
 
 ## 🌍 Deploy to GitHub Pages
 
-1. Push the `mcp-academy/` folder contents to a GitHub repository.
+1. Push the repository to GitHub.
 2. Go to **Settings → Pages → Source → Deploy from branch → main / (root)**.
 3. Your game is live at `https://<username>.github.io/<repo>/`.
 
