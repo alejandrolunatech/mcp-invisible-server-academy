@@ -1,5 +1,7 @@
 # MCP Academy: The Invisible Server 🧙‍♂️
 
+🎮 **[Play it live → https://alejandrolunatech.github.io/mcp-invisible-server-academy/#home](https://alejandrolunatech.github.io/mcp-invisible-server-academy/#home)**
+
 An interactive browser-based educational game that teaches Python MCP (Model Context Protocol) server concepts through story, puzzles, and hands-on terminal challenges.
 
 ---
