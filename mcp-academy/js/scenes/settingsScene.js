@@ -7,52 +7,71 @@ import { SaveSystem }   from '../systems/saveSystem.js';
 import { ToastComponent } from '../components/toast.js';
 import { navigate }     from '../router.js';
 import { AchievementSystem } from '../systems/achievementSystem.js';
+import { getLang, setLang, getT } from '../i18n.js';
 
 export class SettingsScene {
   enter() {
     const el    = document.getElementById('scene-settings');
     const state = getState();
+    const t     = getT();
+    const lang  = getLang();
 
     el.innerHTML = `
       <div style="padding:var(--sp-8) var(--sp-6) var(--sp-4)">
         <div class="container container--narrow">
-          <h2 style="margin-bottom:var(--sp-2)">⚙️ Settings</h2>
-          <p style="color:var(--clr-text-muted); margin-bottom:var(--sp-8)">Manage your academy experience.</p>
+          <h2 style="margin-bottom:var(--sp-2)">${t('settings.title')}</h2>
+          <p style="color:var(--clr-text-muted); margin-bottom:var(--sp-8)">${t('settings.subtitle')}</p>
+
+          <!-- Language -->
+          <div class="settings-section">
+            <div class="settings-section-title">${t('settings.languageSection')}</div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-row__label">${t('settings.languageLabel')}</div>
+                <div class="settings-row__desc">${t('settings.languageDesc')}</div>
+              </div>
+              <div class="lang-switcher" role="group" aria-label="Language">
+                <button class="lang-btn${lang === 'en' ? ' active' : ''}" data-lang="en">EN</button>
+                <button class="lang-btn${lang === 'es' ? ' active' : ''}" data-lang="es">ES</button>
+                <button class="lang-btn${lang === 'nl' ? ' active' : ''}" data-lang="nl">NL</button>
+              </div>
+            </div>
+          </div>
 
           <!-- Progress -->
           <div class="settings-section">
-            <div class="settings-section-title">Progress</div>
+            <div class="settings-section-title">${t('settings.progressSection')}</div>
             <div class="settings-row">
               <div>
-                <div class="settings-row__label">Your XP</div>
-                <div class="settings-row__desc">${state.playerXP} XP earned</div>
+                <div class="settings-row__label">${t('settings.yourXP')}</div>
+                <div class="settings-row__desc">${t('settings.xpEarned', { xp: state.playerXP })}</div>
               </div>
               <div class="xp-badge">⚡ ${state.playerXP}</div>
             </div>
             <div class="settings-row">
               <div>
-                <div class="settings-row__label">Chapters Completed</div>
-                <div class="settings-row__desc">${state.completedChapters.length} of 6</div>
+                <div class="settings-row__label">${t('settings.chaptersCompleted')}</div>
+                <div class="settings-row__desc">${t('settings.chaptersOf', { completed: state.completedChapters.length })}</div>
               </div>
             </div>
             <div class="settings-row">
               <div>
-                <div class="settings-row__label">Reset All Progress</div>
-                <div class="settings-row__desc">Wipes all saves, XP, and achievements.</div>
+                <div class="settings-row__label">${t('settings.resetLabel')}</div>
+                <div class="settings-row__desc">${t('settings.resetDesc')}</div>
               </div>
               <button class="btn btn-ghost btn-sm" id="btn-reset" style="border-color:var(--clr-error); color:var(--clr-error)">
-                Reset ⚠️
+                ${t('settings.resetBtn')}
               </button>
             </div>
           </div>
 
           <!-- Display -->
           <div class="settings-section">
-            <div class="settings-section-title">Display</div>
+            <div class="settings-section-title">${t('settings.displaySection')}</div>
             <div class="settings-row">
               <div>
-                <div class="settings-row__label">Reduced Motion</div>
-                <div class="settings-row__desc">Disables animations and transitions.</div>
+                <div class="settings-row__label">${t('settings.reducedMotionLabel')}</div>
+                <div class="settings-row__desc">${t('settings.reducedMotionDesc')}</div>
               </div>
               <label class="toggle">
                 <input type="checkbox" id="toggle-motion" ${state.settings.reducedMotion ? 'checked' : ''}>
@@ -61,8 +80,8 @@ export class SettingsScene {
             </div>
             <div class="settings-row">
               <div>
-                <div class="settings-row__label">Show Real World Panels</div>
-                <div class="settings-row__desc">Show "Real World Takeaway" sections in chapters.</div>
+                <div class="settings-row__label">${t('settings.realWorldLabel')}</div>
+                <div class="settings-row__desc">${t('settings.realWorldDesc')}</div>
               </div>
               <label class="toggle">
                 <input type="checkbox" id="toggle-realworld" ${state.settings.showRealWorldPanel ? 'checked' : ''}>
@@ -97,11 +116,11 @@ uv run server.py</pre>
 
           <!-- About -->
           <div class="settings-section" style="margin-top:var(--sp-5)">
-            <div class="settings-section-title">About</div>
+            <div class="settings-section-title">${t('settings.aboutSection')}</div>
             <div class="settings-row">
               <div>
-                <div class="settings-row__label">MCP Academy: The Invisible Server</div>
-                <div class="settings-row__desc">An educational browser game teaching MCP server concepts.</div>
+                <div class="settings-row__label">${t('settings.aboutTitle')}</div>
+                <div class="settings-row__desc">${t('settings.aboutDesc')}</div>
               </div>
             </div>
           </div>
@@ -109,6 +128,11 @@ uv run server.py</pre>
         </div>
       </div>
     `;
+
+    // Language switcher in settings
+    el.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => setLang(btn.dataset.lang));
+    });
 
     // Toggle: reduced motion
     el.querySelector('#toggle-motion').addEventListener('change', (e) => {
@@ -126,10 +150,10 @@ uv run server.py</pre>
 
     // Reset progress
     el.querySelector('#btn-reset').addEventListener('click', () => {
-      if (confirm('Are you sure you want to reset ALL progress? This cannot be undone.')) {
+      if (confirm(t('settings.resetConfirm'))) {
         SaveSystem.reset();
         resetState();
-        ToastComponent.show({ type: 'info', icon: '🔄', title: 'Progress reset!', message: 'Starting fresh.' });
+        ToastComponent.show({ type: 'info', icon: '🔄', title: t('settings.resetToastTitle'), message: t('settings.resetToastMsg') });
         navigate('home');
       }
     });

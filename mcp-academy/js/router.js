@@ -9,6 +9,7 @@ import { setState, getState } from './state.js';
 const _scenes = new Map(); // id → { element, onEnter, onLeave }
 
 let _current = null;
+let _currentParams = {};
 
 /** Register a scene by its DOM element id and lifecycle hooks */
 export function registerScene(id, { onEnter, onLeave } = {}) {
@@ -42,6 +43,7 @@ export async function navigate(id, params = {}) {
   // Enter new scene
   setState({ currentScene: id });
   _current = id;
+  _currentParams = params;
 
   next.element.classList.add('active');
   next.element.scrollTop = 0;
@@ -55,6 +57,18 @@ export async function navigate(id, params = {}) {
 /** Get the currently active scene id */
 export function getCurrentScene() {
   return _current;
+}
+
+/**
+ * Re-run the current scene's onEnter without the duplicate-navigation guard.
+ * Used by i18n to re-render after a language change.
+ */
+export async function reloadCurrentScene() {
+  if (!_current) return;
+  const scene = _scenes.get(_current);
+  if (!scene) return;
+  scene.element.scrollTop = 0;
+  if (scene.onEnter) await scene.onEnter(_currentParams);
 }
 
 /** Handle browser back/forward */

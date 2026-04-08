@@ -4,7 +4,17 @@
 
 import { unlockAchievement, isAchievementUnlocked, getState } from '../state.js';
 import { ACHIEVEMENTS } from '../data/achievements.js';
+import { ACHIEVEMENTS_ES } from '../data/achievements.es.js';
+import { ACHIEVEMENTS_NL } from '../data/achievements.nl.js';
 import { ToastComponent } from '../components/toast.js';
+import { getLang, getT } from '../i18n.js';
+
+function getLocalizedAchievements() {
+  const lang = getLang();
+  if (lang === 'es') return ACHIEVEMENTS_ES;
+  if (lang === 'nl') return ACHIEVEMENTS_NL;
+  return ACHIEVEMENTS;
+}
 
 export const AchievementSystem = {
   init() {
@@ -16,12 +26,13 @@ export const AchievementSystem = {
     const wasNew = unlockAchievement(id);
     if (!wasNew) return false;
 
-    const def = ACHIEVEMENTS.find(a => a.id === id);
+    const t   = getT();
+    const def = getLocalizedAchievements().find(a => a.id === id);
     if (def) {
       ToastComponent.show({
         type: 'achievement',
         icon: def.icon,
-        title: `Achievement Unlocked: ${def.title}`,
+        title: `${t('achievements.unlocked')}: ${def.title}`,
         message: def.description,
       });
     }
@@ -39,7 +50,8 @@ export const AchievementSystem = {
   /** Render achievement grid into a container */
   renderGrid(container) {
     const state = getState();
-    container.innerHTML = ACHIEVEMENTS.map(a => {
+    const achievements = getLocalizedAchievements();
+    container.innerHTML = achievements.map(a => {
       const unlocked = !!state.achievements[a.id];
       return `
         <div class="badge ${unlocked ? 'unlocked' : 'locked'}" title="${a.description}">

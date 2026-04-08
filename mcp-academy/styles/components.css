@@ -90,6 +90,30 @@
 }
 .btn-icon:hover { color: var(--clr-primary); border-color: var(--clr-primary); }
 
+/* ==================== LANG SWITCHER ==================== */
+.lang-switcher {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 2px;
+}
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: var(--clr-text-muted);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  transition: all 150ms ease;
+}
+.lang-btn:hover { color: var(--clr-text); background: rgba(255,255,255,0.06); }
+.lang-btn.active { background: var(--clr-primary); color: var(--bg-deep); }
+
 /* Sizes */
 .btn-sm { padding: var(--sp-2) var(--sp-4); font-size: 0.85rem; }
 .btn-lg { padding: var(--sp-4) var(--sp-10); font-size: 1.1rem; }

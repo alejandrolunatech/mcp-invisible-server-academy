@@ -3,11 +3,12 @@
  * Bootstraps all systems, registers scenes, starts the router.
  */
 
-import { initRouter, registerScene, navigate } from './router.js';
+import { initRouter, registerScene, navigate, reloadCurrentScene } from './router.js';
 import { getState, setState, subscribe, resetState } from './state.js';
 import { SaveSystem }       from './systems/saveSystem.js';
 import { AchievementSystem } from './systems/achievementSystem.js';
 import { ToastComponent }   from './components/toast.js';
+import { initI18n, getLang, setLang, getT, subscribeI18n } from './i18n.js';
 
 // Scene renderers
 import { HomeScene }     from './scenes/homeScene.js';
@@ -26,6 +27,9 @@ window.App = {
 };
 
 async function boot() {
+  // 0. Load persisted language
+  initI18n();
+
   // 1. Load saved progress
   SaveSystem.load();
 
@@ -75,6 +79,12 @@ async function boot() {
     SaveSystem.save(state);
   });
 
+  // Re-render top bar and current scene on language change
+  subscribeI18n(() => {
+    buildTopBar();
+    reloadCurrentScene();
+  });
+
   // 8. Start the router
   initRouter();
 }
@@ -84,16 +94,24 @@ function buildTopBar() {
   const bar = document.getElementById('top-bar');
   if (!bar) return;
 
+  const t    = getT();
+  const lang = getLang();
+
   bar.innerHTML = `
     <div class="top-bar__logo">
       <span>🧙</span>
-      MCP Academy
+      ${t('topbar.title')}
     </div>
     <div class="top-bar__actions">
       <div class="xp-badge" id="xp-badge">⚡ 0 XP</div>
-      <button class="btn-icon" id="btn-map"      title="World Map">🗺️</button>
-      <button class="btn-icon" id="btn-glossary" title="Glossary">📖</button>
-      <button class="btn-icon" id="btn-settings" title="Settings">⚙️</button>
+      <button class="btn-icon" id="btn-map"      title="${t('topbar.map')}">🗺️</button>
+      <button class="btn-icon" id="btn-glossary" title="${t('topbar.glossary')}">📖</button>
+      <button class="btn-icon" id="btn-settings" title="${t('topbar.settings')}">⚙️</button>
+      <div class="lang-switcher" role="group" aria-label="Language">
+        <button class="lang-btn${lang === 'en' ? ' active' : ''}" data-lang="en">EN</button>
+        <button class="lang-btn${lang === 'es' ? ' active' : ''}" data-lang="es">ES</button>
+        <button class="lang-btn${lang === 'nl' ? ' active' : ''}" data-lang="nl">NL</button>
+      </div>
     </div>
   `;
 
@@ -104,12 +122,24 @@ function buildTopBar() {
   bar.querySelector('#btn-settings')
      .addEventListener('click', () => navigate('settings'));
 
+  bar.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setLang(btn.dataset.lang);
+    });
+  });
+
   updateTopBar(getState());
 }
 
 function updateTopBar(state) {
   const badge = document.getElementById('xp-badge');
   if (badge) badge.textContent = `⚡ ${state.playerXP} XP`;
+
+  // Keep lang buttons in sync
+  const lang = getLang();
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
 }
 
 // ─── Particle Canvas ────────────────────────────────────────

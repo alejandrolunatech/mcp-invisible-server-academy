@@ -4,6 +4,7 @@
 
 import { navigate } from '../router.js';
 import { setState } from '../state.js';
+import { getT } from '../i18n.js';
 
 /**
  * Build a chapter card element
@@ -14,6 +15,7 @@ export function createChapterCard(chapter, state) {
   const { id, title, subtitle, icon, color, xpReward, description, isFinalBoss } = chapter;
   const unlocked  = state.unlockedChapters.includes(id);
   const completed = state.completedChapters.includes(id);
+  const t = getT();
 
   const card = document.createElement('div');
   card.className = `chapter-card${unlocked ? '' : ' locked'}${completed ? ' completed' : ''}${isFinalBoss ? ' portal-shimmer' : ''}`;
@@ -24,17 +26,17 @@ export function createChapterCard(chapter, state) {
       <div class="final-boss-card__icon">${icon}</div>
       <h3 class="final-boss-card__title">${title}</h3>
       <p class="final-boss-card__desc">${description}</p>
-      ${!unlocked ? '<div class="final-boss-card__lock">🔒 Complete all 5 chapters first</div>' : ''}
-      ${completed ? '<div style="color:var(--clr-success); margin-top:var(--sp-3); font-weight:700">✅ COMPLETED — The Server is Restored!</div>' : ''}
+      ${!unlocked ? `<div class="final-boss-card__lock">🔒 ${t('card.lockedBoss')}</div>` : ''}
+      ${completed ? `<div style="color:var(--clr-success); margin-top:var(--sp-3); font-weight:700">✅ ${t('card.completed')}</div>` : ''}
     `;
   } else {
     card.innerHTML = `
-      <div class="chapter-card__number">Chapter ${id}</div>
+      <div class="chapter-card__number">${t('card.chapter', { id })}</div>
       <div class="chapter-card__icon">${icon}</div>
       <div class="chapter-card__title">${title}</div>
       <div class="chapter-card__desc">${subtitle}</div>
-      <div class="chapter-card__xp">⚡ ${xpReward} XP</div>
-      ${!unlocked ? '<div class="chapter-card__lock">🔒</div>' : ''}
+      <div class="chapter-card__xp">⚡ ${t('card.xp', { xp: xpReward })}</div>
+      ${!unlocked ? `<div class="chapter-card__lock">🔒</div>` : ''}
     `;
   }
 

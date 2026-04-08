@@ -5,7 +5,7 @@
 
 import { navigate }            from '../router.js';
 import { getState, addXP, completeChapter } from '../state.js';
-import { CHAPTERS, getChapter } from '../data/chapters.js';
+import { getLocalizedChapter } from '../data/localizedChapters.js';
 import { DialogueSystem }      from '../systems/dialogueSystem.js';
 import { PuzzleSystem }        from '../systems/puzzleSystem.js';
 import { QuizSystem }          from '../systems/quizSystem.js';
@@ -14,6 +14,7 @@ import { AchievementSystem }   from '../systems/achievementSystem.js';
 import { createCodePanel }     from '../components/codePanel.js';
 import { ToastComponent }      from '../components/toast.js';
 import { discoverGlossaryTerm } from '../state.js';
+import { getT } from '../i18n.js';
 
 // Steps in a chapter flow
 const STEPS = ['intro', 'puzzle', 'terminal', 'quiz', 'complete'];
@@ -26,7 +27,7 @@ export class ChapterScene {
 
   enter({ chapterId } = {}) {
     const id = chapterId || getState().currentChapterId;
-    this._chapter   = getChapter(id);
+    this._chapter   = getLocalizedChapter(id);
     this._stepIndex = 0;
 
     if (!this._chapter) {
@@ -48,13 +49,14 @@ export class ChapterScene {
   _render() {
     const c   = this._chapter;
     const el  = document.getElementById('scene-chapter');
+    const t   = getT();
     const isBoss = c.isFinalBoss;
 
     el.innerHTML = `
       <!-- Chapter Header -->
       <div class="chapter-header">
         <button class="chapter-back-btn" id="chapter-back">
-          ← Map
+          ← ${t('chapter.backToMap')}
         </button>
         <div class="chapter-header-info">
           <div class="chapter-header-title">${c.icon} ${c.title}</div>
@@ -88,6 +90,7 @@ export class ChapterScene {
 
   _buildIntroStep() {
     const c    = this._chapter;
+    const t    = getT();
     const wrap = document.querySelector('#step-intro');
 
     wrap.innerHTML = `
@@ -99,7 +102,7 @@ export class ChapterScene {
       <div id="dialogue-wrap"></div>
       <div style="display:flex; justify-content:flex-end">
         <button class="btn btn-primary" id="btn-next-intro" style="display:none">
-          Begin Challenge →
+          ${t('chapter.beginChallenge')}
         </button>
       </div>
     `;
@@ -132,6 +135,7 @@ export class ChapterScene {
   }
 
   _onPuzzleComplete(wrap, c) {
+    const t = getT();
     // Add sparkle effect
     wrap.classList.add('forge-spark');
     setTimeout(() => wrap.classList.remove('forge-spark'), 600);
@@ -141,7 +145,7 @@ export class ChapterScene {
       const codeWrap = document.createElement('div');
       codeWrap.style.cssText = 'animation:slideUp 0.4s ease both';
       codeWrap.innerHTML = `
-        <p class="section-title">📜 Real Code Example</p>
+        <p class="section-title">${t('chapter.realCodeExample')}</p>
       `;
       const panel = createCodePanel({
         lang: c.codeExample.lang,
@@ -155,7 +159,7 @@ export class ChapterScene {
     // Continue button
     const continueWrap = document.createElement('div');
     continueWrap.style.cssText = 'display:flex; justify-content:flex-end; animation:slideUp 0.4s 0.2s ease both';
-    continueWrap.innerHTML = `<button class="btn btn-primary" id="btn-next-puzzle">See it in Action →</button>`;
+    continueWrap.innerHTML = `<button class="btn btn-primary" id="btn-next-puzzle">${t('chapter.seeInAction')}</button>`;
     wrap.appendChild(continueWrap);
     continueWrap.querySelector('#btn-next-puzzle').addEventListener('click', () => this._goToStep(2));
   }
@@ -164,10 +168,11 @@ export class ChapterScene {
 
   _buildTerminalStep() {
     const c    = this._chapter;
+    const t    = getT();
     const wrap = document.querySelector('#step-terminal');
 
     wrap.innerHTML = `
-      <p class="section-title">📟 Live Terminal Simulation</p>
+      <p class="section-title">${t('chapter.terminalTitle')}</p>
       <p style="color:var(--clr-text-muted); font-size:0.9rem; margin-bottom:var(--sp-2)">${c.terminal.title}</p>
       <div class="terminal-panel">
         <div class="terminal-header">
@@ -176,7 +181,7 @@ export class ChapterScene {
           </div>
           <div class="terminal-title">${c.terminal.title}</div>
           <div class="terminal-actions">
-            <button class="btn-icon" id="term-replay" title="Replay">↺</button>
+            <button class="btn-icon" id="term-replay" title="${t('chapter.replay')}">↺</button>
           </div>
         </div>
         <div class="terminal-body" id="chapter-terminal-body" style="min-height:220px"></div>
@@ -184,7 +189,7 @@ export class ChapterScene {
       <div id="realworld-wrap"></div>
       <div style="display:flex; justify-content:flex-end">
         <button class="btn btn-primary" id="btn-next-terminal" style="display:none">
-          Take the Quiz →
+          ${t('chapter.takeQuiz')}
         </button>
       </div>
     `;
@@ -200,7 +205,7 @@ export class ChapterScene {
         const rw = wrap.querySelector('#realworld-wrap');
         rw.innerHTML = `
           <div class="real-world-panel" style="animation:slideUp 0.4s ease both">
-            <div class="real-world-panel__title">🌍 Real World Takeaway</div>
+            <div class="real-world-panel__title">${t('chapter.realWorldTakeaway')}</div>
             <div class="real-world-panel__body">${c.realWorldTakeaway}</div>
           </div>
         `;
@@ -217,8 +222,9 @@ export class ChapterScene {
 
   _buildQuizStep() {
     const c    = this._chapter;
+    const t    = getT();
     const wrap = document.querySelector('#step-quiz');
-    wrap.innerHTML = `<p class="section-title">🎯 Knowledge Check</p>`;
+    wrap.innerHTML = `<p class="section-title">${t('chapter.knowledgeCheck')}</p>`;
 
     const quizContainer = document.createElement('div');
     wrap.appendChild(quizContainer);
@@ -235,6 +241,7 @@ export class ChapterScene {
 
   _buildCompleteStep() {
     const c    = this._chapter;
+    const t    = getT();
     const wrap = document.querySelector('#step-complete');
     const isBoss = c.isFinalBoss;
 
@@ -247,18 +254,16 @@ export class ChapterScene {
           <div class="completion-star">⭐</div>
         </div>
         <h2 style="color:${c.color}; margin-bottom:var(--sp-3)">
-          ${isBoss ? 'The Invisible Server is RESTORED!' : `${c.title} Complete!`}
+          ${isBoss ? t('chapter.serverRestored') : t('chapter.chapterComplete', { title: c.title })}
         </h2>
         <div class="completion-xp">⚡ +${c.xpReward} XP</div>
         <p style="color:var(--clr-text-muted); max-width:480px; margin:var(--sp-4) auto var(--sp-6)">
-          ${isBoss
-            ? 'You have mastered every concept in MCP Academy. The invisible server spirit has been restored. You are an Invisible Architect!'
-            : 'Excellent work! Your knowledge grows stronger. The academy is one step closer to restoration.'}
+          ${isBoss ? t('chapter.bossCompleteMsg') : t('chapter.chapterCompleteMsg')}
         </p>
         <div id="completion-dialogue-wrap" style="text-align:left; margin-bottom:var(--sp-6)"></div>
         <div style="display:flex; gap:var(--sp-4); justify-content:center; flex-wrap:wrap">
-          <button class="btn btn-ghost" id="btn-back-map">← Back to Map</button>
-          ${!isBoss ? `<button class="btn btn-primary" id="btn-next-chapter">Next Chapter →</button>` : ''}
+          <button class="btn btn-ghost" id="btn-back-map">← ${t('chapter.backToMap')}</button>
+          ${!isBoss ? `<button class="btn btn-primary" id="btn-next-chapter">${t('chapter.nextChapter')}</button>` : ''}
         </div>
       </div>
     `;
@@ -271,7 +276,7 @@ export class ChapterScene {
       if (nextBtn) {
         nextBtn.addEventListener('click', () => {
           const nextId = c.id + 1;
-          const nextChapter = getChapter(nextId);
+          const nextChapter = getLocalizedChapter(nextId);
           if (nextChapter) {
             window.App.setState({ currentChapterId: nextId });
             navigate('chapter', { chapterId: nextId });
@@ -327,6 +332,7 @@ export class ChapterScene {
 
   _onComplete() {
     const c = this._chapter;
+    const t = getT();
 
     // Award XP
     addXP(c.xpReward);
@@ -343,8 +349,8 @@ export class ChapterScene {
     ToastComponent.show({
       type: 'success',
       icon: '🌟',
-      title: `Chapter Complete!`,
-      message: `+${c.xpReward} XP earned`,
+      title: t('chapter.completeToast'),
+      message: t('chapter.xpEarned', { xp: c.xpReward }),
     });
 
     // Wire completion buttons (must happen after DOM is visible)

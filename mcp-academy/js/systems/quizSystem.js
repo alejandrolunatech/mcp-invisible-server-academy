@@ -4,6 +4,7 @@
 
 import { addXP, saveQuizScore, unlockAchievement } from '../state.js';
 import { ToastComponent } from '../components/toast.js';
+import { getT } from '../i18n.js';
 
 export class QuizSystem {
   /**
@@ -38,9 +39,10 @@ export class QuizSystem {
 
 function _renderQuestion(container, q, onAnswer) {
   const letters = ['A', 'B', 'C', 'D'];
+  const t = getT();
   container.innerHTML = `
     <div class="quiz-panel" style="animation: slideUp 0.3s ease both">
-      <p class="section-title">Quiz Time</p>
+      <p class="section-title">${t('quiz.quizTime')}</p>
       <p class="quiz-question">${q.q}</p>
       <div class="quiz-options">
         ${q.options.map((opt, i) => `
@@ -79,13 +81,13 @@ function _renderQuestion(container, q, onAnswer) {
       // Show feedback
       feedback.className = `quiz-feedback show ${correct ? 'correct' : 'wrong'}`;
       feedback.innerHTML = `
-        <strong>${correct ? '✅ Correct!' : '❌ Not quite.'}</strong>
+        <strong>${correct ? t('quiz.correct') : t('quiz.incorrect')}</strong>
         ${q.explanation}
       `;
 
       // XP pop
       if (correct) {
-        _xpPop(btn, '+20 XP');
+        _xpPop(btn, t('quiz.xpPop'));
         addXP(20);
       }
 
@@ -97,7 +99,8 @@ function _renderQuestion(container, q, onAnswer) {
 function _showSummary(container, score, total, chapterId, onComplete) {
   const pct = Math.round((score / total) * 100);
   const stars = pct === 100 ? '⭐⭐⭐' : pct >= 66 ? '⭐⭐' : '⭐';
-  const msg   = pct === 100 ? 'Perfect score! Amazing!' : pct >= 66 ? 'Great work!' : 'Keep practising — every attempt teaches you something!';
+  const t = getT();
+  const msg = pct === 100 ? t('quiz.perfect') : pct >= 66 ? t('quiz.great') : t('quiz.keepPractising');
 
   // Save score
   saveQuizScore(chapterId, score, total);
@@ -109,11 +112,11 @@ function _showSummary(container, score, total, chapterId, onComplete) {
 
   container.innerHTML = `
     <div class="quiz-panel" style="text-align:center; animation: scaleIn 0.4s ease both">
-      <p class="section-title">Quiz Complete</p>
+      <p class="section-title">${t('quiz.complete')}</p>
       <div style="font-size:2.5rem; margin:var(--sp-4) 0">${stars}</div>
-      <h3 style="color:var(--clr-primary); margin-bottom:var(--sp-2)">${score} / ${total} correct</h3>
+      <h3 style="color:var(--clr-primary); margin-bottom:var(--sp-2)">${score} / ${total} ${t('quiz.correct')}</h3>
       <p style="color:var(--clr-text-muted); margin-bottom:var(--sp-6)">${msg}</p>
-      <button class="btn btn-primary" id="quiz-continue-btn">Continue →</button>
+      <button class="btn btn-primary" id="quiz-continue-btn">${t('quiz.continue')}</button>
     </div>
   `;
 

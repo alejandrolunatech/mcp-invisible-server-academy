@@ -4,12 +4,14 @@
 
 import { navigate } from '../router.js';
 import { getState  } from '../state.js';
+import { getT } from '../i18n.js';
 
 export class HomeScene {
   enter() {
     const el = document.getElementById('scene-home');
     const { completedChapters, playerXP } = getState();
     const hasProgress = completedChapters.length > 0;
+    const t = getT();
 
     el.innerHTML = `
       <!-- Floating orbs -->
@@ -20,37 +22,34 @@ export class HomeScene {
       </div>
 
       <div class="home-content">
-        <div class="home-eyebrow">MCP Academy</div>
+        <div class="home-eyebrow">${t('home.eyebrow')}</div>
 
-        <h1 class="home-title">The Invisible<br>Server</h1>
+        <h1 class="home-title">${t('home.title').replace('\n', '<br>')}</h1>
 
-        <p class="home-subtitle">
-          A magical academy adventure where you learn to build Python MCP servers,
-          understand STDIO, forge tools, and restore the invisible server spirit.
-        </p>
+        <p class="home-subtitle">${t('home.subtitle')}</p>
 
         <div class="home-badges">
-          <div class="home-badge">🌀 STDIO Streams</div>
-          <div class="home-badge">⚗️ Python Tools</div>
-          <div class="home-badge">📡 Message Flow</div>
-          <div class="home-badge">⚡ UV Forge</div>
-          <div class="home-badge">🌀 Client Portal</div>
+          <div class="home-badge">${t('home.badge1')}</div>
+          <div class="home-badge">${t('home.badge2')}</div>
+          <div class="home-badge">${t('home.badge3')}</div>
+          <div class="home-badge">${t('home.badge4')}</div>
+          <div class="home-badge">${t('home.badge5')}</div>
         </div>
 
         <div class="home-cta">
           <button class="btn btn-primary btn-lg" id="btn-start">
-            ${hasProgress ? '⚔️ Continue Journey' : '🔮 Begin Your Journey'}
+            ${hasProgress ? t('home.continue') : t('home.begin')}
           </button>
           ${hasProgress ? `
             <div style="color:var(--clr-text-muted); font-size:0.85rem;">
-              Progress: ${completedChapters.length}/6 chapters · ${playerXP} XP earned
+              ${t('home.progress', { completed: completedChapters.length, xp: playerXP })}
             </div>
           ` : ''}
         </div>
 
         <div class="home-scroll-hint">
           <span>▼</span>
-          5 chapters + Final Boss
+          ${t('home.scrollHint')}
           <span>▼</span>
         </div>
       </div>
